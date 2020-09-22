@@ -46,7 +46,16 @@ class EcommerceInstall extends Command
     }
 
     protected function proceed() {
-        $result = unlink(public_path('storage'));
+        $linkFile = public_path('storage');
+        if(file_exists($linkFile)) {
+            if(is_link($linkFile)){
+                unlink($linkFile);
+            }
+        }
+        if(!file_exists(storage_path('app/public'))) {
+            mkdir(storage_path('app/public/'));
+        }
+        $this->info('storate is here');
         $this->call('storage:link');
         $copySuccess1 = File::copyDirectory(public_path('/images/products/dummy'), public_path('storage/products/dummy'));
         $copySuccess2 = File::copyDirectory(public_path('/images/users'), public_path('storage/users'));
